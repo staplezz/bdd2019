@@ -1,3 +1,3 @@
 Integrantes:
 Jorge Francisco Cortés López 314330981
-Diego Estrada Mejia [Agregar No. Cuenta]
+Diego Estrada Mejia 314309404
