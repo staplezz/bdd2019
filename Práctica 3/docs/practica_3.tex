@@ -1,0 +1,152 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[letterpaper,margin=1in,footskip=0.25in]{geometry}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,    
+    urlcolor=red,
+}
+
+\title{Reporte de conversión de Entidad Relación a tablas\\
+Práctica 3}
+\author{Jorge Francisco Cortés López\\
+Diego Estrada Mejia}
+\date{30 de Agosto de 2019}
+
+\begin{document}
+
+\maketitle
+
+\section{Conversión de Modelo Entidad Relación a tablas.}
+<<Deberán hacer una descripción de las relaciones que resulten de la conversión, explicando las referencias de sus llaves y por qué razón le asignaron el dominio a cadaatributo de la relación.>>
+
+\section{Preguntas.}
+\begin{enumerate}
+    \item ¿Cuáles son las principales diferencias entre el diagrama E-R y Relacional?\\
+    La diferencia principal entre el diagrama E-R y relacional es que el diagrama E-R se enfoca entre las entidades y sus relaciones. Por otro lado, el modelo relacional se enfoca en tablas y la relación entre los datos de las tablas.\\
+    Un diagrama E-R describe los datos con el conjunto de entidades, relaciones y atributos. Sin embargo, el modelo relacional describe los datos con las tuplas, atributos y el dominio de los atributos.\\
+    Uno puede entender fácilmente las relaciones entre los datos en el diagrama E-R comparado con el modelo relacional.\\
+    El diagrama E-R tiene una cardinalidad asociada como una restricción en donde el modelo relacional no tiene esa restricción.
+    
+    \item ¿Cuáles son las principales características del diagrama E-R?
+    Un diagrama E-R es una representación gráfica que modela relaciones entre personas, objetos, conceptos o eventos dentro de un sistema.
+    Existen cinco componentes básicos de un diagrama entidad-relación.
+    Componentes similares estarán diseñados por la misma forma. Por ejemplo, todas las entidades estarán encerradas por un rectangulo, mientras que todos los atributos estarán encerrados por un rombo. Las componentes incluyen:\\
+    \begin{enumerate}
+        \item Entidades, las cuales son objetos o conceptos que pueden tener datos guardados sobre ellos. Las entidades se refieren a las tablas que usamos en las BDD.
+        \item Atributos, los cuales son propiedades o características de las entidades. Un atributo puede ser denotado como una llave primaria, la cual identifica un atributo único, o una llave foránea, la cual puede ser asignada a múltiples atributos.
+        \item Las relaciones entre y sobre esas entidades
+        \item Acciones, las cuales describen como las entidades comparten información a la base de datos.
+        \item Conexión de líneas.
+    \end{enumerate}
+    Una notación de cardinalidad puede entonces definir los atributos de la relación entre las entidades. Las cardinalidades pueden denotar que una entidad es opcional (Por ejemplo, un cliente puede o no tener una tarjeta de cliente distinguido) u obligatoria (Por ejemplo, debe haber al menos un producto listado en un almacen).\\
+    Las tres principales cardinalidades son:
+    \begin{enumerate}
+        \item Una relación uno-a-uno (1:1). Por ejemplo, si cada cliente en una bases de datos está asociado con una sola dirección de envío.
+        \item Una relación uno a varios (1:M). Por ejemplo, un sólo cliente puede hacer una orden para múltiples productos. El cliente está asociado con varias entidades, pero todas esas entidades tienen una sola conexión de regreso con el mismo cliente.
+        \item Una relación de varios a varios (M:N). Por ejemplo, una compañia en donde todos los agentes del call center trabajan con múltiples clientes, cada agente está asociado con varios clientes, y varios clientes pueden estar relacionados con muchos otros agentes.
+    \end{enumerate}
+    
+    \item ¿Es necesario tener llaves primarias en cada entidad de nuestro diagrama? Explica.\\
+    Las llaves primarias y foráneas son una manera en las cuales podemos restringir datos relacionados para asegurarnos que la BDD se mantenga consistente y para asegurarnos de que no hayan datos redundantes en la BDD como resultado de eliminar una tabla o una columna en una de las tablas que puede afectar los datos en otras tablas que puedan estar relacionadas. Puede causar problemas de integridad de datos así como problemas en la aplicación que haga uso de la base de datos. Por lo que siempre es recomendable asignar una llave primaria o foránea a cada entidad.
+    
+    \item Explica con tus palabras que es una llave primaria (PK), llave candidata (UNIQUE) y llave foránea (FK)\\
+    \textbf{PK} Una llave primaria es un atributo o conjunto de atributos que nos ayudan a identificar un ejemplar de una entidad, una llave primaria en general debería de cumplir con:\\
+    Tener un valor no vacío para cada ejemplar de la entidad, el valor debe ser único para cada ejemplar de la entidad y los valores no deben cambiar o convertirse en vacíos a lo largo de la existencia de los ejemplares de la entidad.\\
+    \textbf{UNIQUE} Una llave candidata es una combinación de atributos que pueden ser usados únicamente para identificar un ejemplar de la entidad sin referirse a otros datos. Todas las llaves candidatas tienen algunas propiedades en común. Una de las propiedades es que durante la existencia de la llave candidata, el atributo usado para la identificación debe mantenerse igual, luego otra propiedad es que el valor no puede ser vació y que además la llave candidata debe ser única.\\
+    \textbf{FK} Una llave foránea es un atributo que completa una relación identificando la entidad padre. Las llaves foráneas proveen un método para mantener la integridad de los datos (llamada integridad referencial) y para navegar entre diferentes instancias de una entidad. Cada relación en el modelo debe estar sostenidad por una llave foránea.
+\end{enumerate}
+
+\section{Tabla de tipos de datos.}
+A continuación se muestra una tabla con los diferentes tipos de datos con los que cuenta PostegreSQL.Se pueden consultar en la \href{https://www.postgresql.org/docs/9.2/datatype.html}{documentación}.
+
+\begin{center}
+\begin{tabular}{ |c|c|c|  }
+ \hline
+ \multicolumn{3}{|c|}{Lista de tipos de datos en PostegreSQL} \\
+ \hline
+Nombre de tipo & Alias & Descripción\\
+\hline
+bigint & int8 & entero de 8 bits con signo\\
+\hline
+bigserial & serial8 & entero de 8 bits auto-incrementante\\
+\hline
+bit [ (n) ] &  & cadena de bits de tamaño fijo\\
+\hline
+bit varying [ (n) ] & varbit &  cadena de bits de tamaño variable\\
+\hline
+boolean & bool & valor booleano\\
+\hline
+box & & caja rectangular en un plano\\
+\hline
+bytea & & datos binarios ("arreglo de bytes")\\
+\hline
+character [ (n) ] & char [ (n) ]& cadena de caractéres de tamaño fijo\\
+\hline
+character varying [ (n) ] & varchar [ (n) ] & cadena de caractéres de tamaño variable \\
+\hline
+cidr & & dirección de red IPv4 o IPv6\\
+\hline
+circle & & círculo en un plano\\
+\hline
+date & & fecha de calendario (año, mes, día)\\
+\hline
+double precision & float8 & número real con doble precisión\\
+\hline
+inet & & dirección host IPv4 o IPv6\\
+\hline
+integer & int, int4 & entero de cuatro bits con signo\\
+\hline
+interval [fields] [(p)] && Intervalo de tiempo\\
+\hline
+json && dato JSON\\
+\hline
+line && linea infinita en un plano\\
+\hline
+lseg && segmento de linea en un plano\\
+\hline
+macaddr && dirección MAC\\
+\hline
+money && valor monetario\\
+\hline
+numeric [(p,s)] & decimal [(p,s)] & selección precisa de un valor numérico\\
+\hline
+path && trayectoria geométrica en un plano\\
+\hline
+point && punto geométrico en un plano\\
+\hline
+polygon && trayectoria cerrada en un plano\\
+\hline
+real & float4 & número real con precisión simple\\
+\hline
+smallint & int2 & entero con signo de dos bytes\\
+\hline
+smallserial & serial2 & entero autoincrementante de dos bytes\\
+\hline
+serial & serial4 & entero autoincrementante de cuatro bytes\\
+\hline
+text && cadena de tamaño variable\\
+\hline
+time [(p)] [without time zone] && tiempo del día (sin zona horaria)\\
+\hline
+time [(p)] with time zone & timetz & tiempo del día. con zona horaria\\
+\hline
+timestamp [(p)] [without time zone] && fecha y hora (sin zona horaria)\\
+\hline
+tsquery && consulta de texto\\
+\hline
+tsvector && búsqueda de texto en documento\\
+\hline
+txid\_snapshot && ID de transacción a nivel de usuario de una copia\\
+\hline
+uuid && identificador único universal\\
+\hline
+xml && dato XML\\
+ \hline
+\end{tabular}
+\end{center}
+
+
+
+\end{document}
