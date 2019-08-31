@@ -1,16 +1,7 @@
-18 Agosto 2019:
-Discusión incial sobre como se organizaran las entidades y cuales serán así como los medios externos de comunicación
-como github, whatsapp, para enviar archivos y mantener una organización de archivos.
-
-19 Agosto 2019:
-Primer boceto de la base de datos, aprendizaje de la herramienta para dibujar los diagramas (DIA), se acuerda que las entidades para
-el modelo de la BDD será: Usuario, Conductor, Viaje y automóvil. Cada entidad con sus respectivos atributos.
-
-20 Agosto 2019:
-Boceto transferido a DIA para una mejor organización, se empieza a realizar las relaciones que contendrá la base de datos como: Reservar, Aceptar, Manejar y Tener. Corrección de errores de diseño en los atributos.
-
-21 Agosto 2019:
-Corrección de algunos diseños de relaciones y organización en general de la base de datos así como la adición de el diagrama ER extendido.
-
-22 Agosto 2019:
-Término de ambos diagramas ER y ER extendido así como una revisión en general de los diagramas.
+28 de Agosto:
+Se tuvo la primera reunión para acordar el plan general de la conversión y se hizo un primer
+boceto.
+29 de Agosto:
+Se revisa el boceto para tener la versión final. Se hizo un primer borrador del reporte.
+30 de Agosto:
+El borrador se mejora para tener una versión final.
