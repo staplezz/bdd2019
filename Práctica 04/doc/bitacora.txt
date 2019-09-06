@@ -1,1 +1,11 @@
+2/Sep/2019
+Discusión sobre la realización de las instrucciones DDL.
 
+3/Sep/2019
+Cambios en algunas restricciones de tipo para las llaves y así poder trabajar más fácilmente con la base de datos.
+
+4/Sep/2019
+Pasado del modelo relacional a instrucciones DDL y agregación de comentarios sobre las tablas y columnas.
+
+5/Sep/2019
+Revisión de las instrucciones DDL.
