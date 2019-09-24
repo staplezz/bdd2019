@@ -53,12 +53,14 @@ COMMENT ON COLUMN Cliente.idPersona IS 'llave foranea de el cliente que es una p
 --Tabla de la tarjeta de puntos.
 CREATE TABLE Tarjeta (
 	idTarjeta char(10) PRIMARY KEY,
+	puntos integer,
 	idCliente integer references Cliente(idCliente)
 );
 
 --Comentarios de la tabla Tarjeta.
 COMMENT ON TABLE Tarjeta IS 'Para tarjeta de puntos de cliente frecuente';
 COMMENT ON COLUMN Tarjeta.idTarjeta IS 'la llave primaria asociada a la tarjeta';
+COMMENT ON COLUMN Tarjeta.puntos IS 'Los puntos que tiene la tarjeta';
 COMMENT ON COLUMN Tarjeta.idCliente IS 'llave foranea asociada a la tarjeta de la persona';
 
 --Tabla para el conductor.
