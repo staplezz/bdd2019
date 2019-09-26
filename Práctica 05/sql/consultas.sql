@@ -6,3 +6,11 @@ WHERE edad > 21;
 --(Falta la fecha de inicio)                                        
 SELECT Persona.Nombre, date_part('year',age(fechaNac)) as edad FROM Persona
 JOIN Conductor ON Conductor.idPersona = Persona.idPersona;                                          
+
+-- Ejercicio 5)
+-- TODOS los automóviles que ha manejado cada chofér.
+SELECT DISTINCT placas
+FROM conductor INNER JOIN manejar
+ON conductor.idconductor = manejar.idconductor;
+
+--SELECT placas from manejar;
