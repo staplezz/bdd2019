@@ -114,7 +114,7 @@ COMMENT ON CONSTRAINT idManejar ON Manejar IS 'La llave candidata compuesta de l
 CREATE TABLE Viaje (
 	idViaje serial PRIMARY KEY NOT NULL,
 	Costo money NOT NULL,
-	Tiempo time NOT NULL,
+	Tiempo integer NOT NULL,
 	Destino varchar(200) NOT NULL,
 	Origen varchar(200) NOT NULL,
 	TipoViaje char(200) NOT NULL,
