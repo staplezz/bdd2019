@@ -21,6 +21,10 @@ ON Persona.idPersona = nn.idPMas;
 
 -- Ejercicio 4
 -- Conocer los automóviles que se tienen asignado un chofer disponibles.
+SELECT Automovil.placas, marca, preciofactura, año 
+FROM Automovil
+INNER JOIN (SELECT DISTINCT Placas FROM Manejar) AS autosActivos
+ON autosActivos.Placas = Automovil.Placas;
 
 -- Ejercicio 5)
 -- Conocer cuales son TODOS los automóviles que ha manejado cada chofer.
