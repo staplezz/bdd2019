@@ -11,6 +11,13 @@ JOIN Conductor ON Conductor.idPersona = Persona.idPersona;
 
 -- Ejercicio 3
 -- Conocer el nombre y edad de todos los choferes que hayan hecho mas de siete viajes.
+SELECT Nombre, date_part('year',age(fechaNac)) as edad
+FROM Persona INNER JOIN
+(SELECT Conductor.idPersona AS idPMas
+FROM Conductor INNER JOIN
+(SELECT idConductor FROM Viaje GROUP BY Viaje.idConductor HAVING COUNT(Viaje) > 7) AS cc
+ON Conductor.idConductor = cc.idConductor) AS nn
+ON Persona.idPersona = nn.idPMas;
 
 -- Ejercicio 4
 -- Conocer los automóviles que se tienen asignado un chofer disponibles.
