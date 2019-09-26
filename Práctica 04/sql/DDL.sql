@@ -20,24 +20,28 @@ COMMENT ON COLUMN Persona.Direccion IS 'La dirección en donde vive la persona';
 --Tabla de el/los teléfonos de una persona.
 CREATE TABLE PersonaTelefono(
 	Telefono char(10) NOT NULL,
-	idPersona integer references Persona(idPersona)
+	idPersona integer references Persona(idPersona),
+	CONSTRAINT idPersonaTelefono PRIMARY KEY (Telefono, idPersona)
 );
 
 --Comentarios de la tabla PersonaTelefono.
 COMMENT ON TABLE PersonaTelefono IS 'Para el/los teléfonos de las personas';
 COMMENT ON COLUMN PersonaTelefono.Telefono IS 'Un número telefónico de una persona';
 COMMENT ON COLUMN PersonaTelefono.idPersona IS 'llave foranea asociada a un teléfono de una persona';
+COMMENT ON CONSTRAINT idPersonaTelefono ON PersonaTelefono IS 'La llave candidata compuesta de el teléfono y el id de la persona';
 
 --Tabla el o los correos electrónicos de una persona.
 CREATE TABLE PersonaCorreo(
 	Correo char(30) NOT NULL,
-	idPersona integer references Persona(idPersona)
+	idPersona integer references Persona(idPersona),
+	CONSTRAINT idPersonaCorreo PRIMARY KEY (Correo, idPersona)
 );
 
 --Comentarios de la tabla PersonaCorreo.
 COMMENT ON TABLE PersonaCorreo IS 'Para el/los correo electrónicos de las personas';
 COMMENT ON COLUMN PersonaCorreo.Correo IS 'Un correo electrónico de una persona';
 COMMENT ON COLUMN PersonaCorreo.idPersona IS 'llave foranea asociada a un correo de una persona';
+COMMENT ON CONSTRAINT idPersonaCorreo ON PersonaCorreo IS 'La llave candidata compuesta de el correo y el id de la persona';
 
 --Tabla para el cliente.
 CREATE TABLE Cliente (
@@ -53,7 +57,6 @@ COMMENT ON COLUMN Cliente.idPersona IS 'llave foranea de el cliente que es una p
 --Tabla de la tarjeta de puntos.
 CREATE TABLE Tarjeta (
 	idTarjeta char(10) PRIMARY KEY,
-	puntos integer,
 	idCliente integer references Cliente(idCliente)
 );
 
@@ -106,7 +109,7 @@ COMMENT ON COLUMN Manejar.Placas IS 'Las placas de un automóvil que maneja el c
 COMMENT ON COLUMN Manejar.idConductor IS 'La llave del conductor que maneja el automóvil';
 COMMENT ON COLUMN Manejar.FechaInic IS 'La fecha de inicio que el conductor empieza a manejar el automóvil';
 COMMENT ON COLUMN Manejar.FechaFin IS 'La fecha en la que terminó de conducir el coche, puede ser vacía';
-COMMENT ON CONSTRAINT idManejar ON Manejar IS 'La llave candidata compuesta de las placas del automóvil, la llave del conductor y fecha de inicio'
+COMMENT ON CONSTRAINT idManejar ON Manejar IS 'La llave candidata compuesta de las placas del automóvil, la llave del conductor y fecha de inicio';
 
 --Tabla para la entidad Viaje.
 CREATE TABLE Viaje (
@@ -136,13 +139,14 @@ COMMENT ON COLUMN Viaje.idConductor IS 'La llave del conductor que tomo el viaje
 
 --Tabla para el atributo forma de pago.
 CREATE TABLE FormaDePago (
-	idPago char(10),
+	formaPago char(10) NOT NULL,
+	monto money NOT NULL,
 	idViaje integer references Viaje(idViaje),
-	CONSTRAINT idFormaDePago PRIMARY KEY (idPago, idViaje)
+	CONSTRAINT idFormaDePago PRIMARY KEY (formaPago, monto, idViaje)
 );
 
 --Comentarios de la tabla forma de pago.
 COMMENT ON TABLE FormaDePago IS 'Para guardar la forma de pago de cada viaje';
 COMMENT ON COLUMN FormaDePago.idPago IS 'La llave asociada a una forma de pago';
 COMMENT ON COLUMN FormaDePago.idViaje IS 'La llave asociada al viaje que se pagó';
-COMMENT ON CONSTRAINT idFormaDePago ON FormaDePago IS 'La llave candidata formada por la llave del pago y del viaje';
+COMMENT ON CONSTRAINT idFormaDePago ON FormaDePago IS 'La llave candidata formada por la llave del pago, el monto y el id del viaje';
