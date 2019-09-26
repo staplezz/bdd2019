@@ -63,7 +63,6 @@ CREATE TABLE Tarjeta (
 --Comentarios de la tabla Tarjeta.
 COMMENT ON TABLE Tarjeta IS 'Para tarjeta de puntos de cliente frecuente';
 COMMENT ON COLUMN Tarjeta.idTarjeta IS 'la llave primaria asociada a la tarjeta';
-COMMENT ON COLUMN Tarjeta.puntos IS 'Los puntos que tiene la tarjeta';
 COMMENT ON COLUMN Tarjeta.idCliente IS 'llave foranea asociada a la tarjeta de la persona';
 
 --Tabla para el conductor.
@@ -147,6 +146,7 @@ CREATE TABLE FormaDePago (
 
 --Comentarios de la tabla forma de pago.
 COMMENT ON TABLE FormaDePago IS 'Para guardar la forma de pago de cada viaje';
-COMMENT ON COLUMN FormaDePago.idPago IS 'La llave asociada a una forma de pago';
+COMMENT ON COLUMN FormaDePago.formaPago IS 'La forma de pago con la que se pagó el viaje';
+COMMENT ON COLUMN FormaDePago.monto IS 'El monto que se pago del viaje con la forma de pago';
 COMMENT ON COLUMN FormaDePago.idViaje IS 'La llave asociada al viaje que se pagó';
 COMMENT ON CONSTRAINT idFormaDePago ON FormaDePago IS 'La llave candidata formada por la llave del pago, el monto y el id del viaje';
