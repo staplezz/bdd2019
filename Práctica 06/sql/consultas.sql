@@ -17,3 +17,19 @@ FROM conductor AS c, persona AS p, manejar AS m
 WHERE c.idPersona = p.idPersona and c.idConductor = m.idConductor
 GROUP BY p.nombre, edad
 HAVING COUNT(m) > 1;
+                                    
+--4: Conocer el nombre del chofer y el nombre de los clientes que han tomado un viaje con el chofer.
+SELECT DISTINCT cdt.conductor, clt.cliente, cdt.idViaje
+FROM (
+	SELECT p.nombre AS conductor, idViaje
+	FROM viaje AS v, conductor AS c, persona AS p
+	WHERE v.idConductor = c.idConductor and c.idPersona = p.idPersona
+) cdt
+INNER JOIN
+(
+	SELECT p.nombre AS cliente, idViaje
+	FROM viaje AS v, cliente AS c, persona AS p
+	WHERE v.idCliente = c.idCliente and c.idPersona = p.idPersona
+) clt
+ON cdt.idViaje = clt.idViaje
+ORDER BY conductor;                                
