@@ -10,3 +10,10 @@ SELECT p.nombre, p.apaterno, p.amaterno, date_part('year',age(p.fechaNac)) AS ed
 FROM conductor AS c, persona AS p, manejar AS m
 WHERE c.idPersona = p.idPersona and c.idConductor = m.idConductor
 GROUP BY p.nombre, p.apaterno, p.amaterno, edad;                            
+
+--3: Conocer el nombre y edad de todos los choferes que han conducido en mas de un automóvil.
+SELECT nombre, date_part('year',age(p.fechaNac)) AS edad, COUNT(m) AS manejado
+FROM conductor AS c, persona AS p, manejar AS m
+WHERE c.idPersona = p.idPersona and c.idConductor = m.idConductor
+GROUP BY p.nombre, edad
+HAVING COUNT(m) > 1;
