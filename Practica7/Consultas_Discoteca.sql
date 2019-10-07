@@ -1,12 +1,13 @@
 -- Sirve para buscar primero en el esquema industria_musical.
 SET search_path TO industria_musical;
+
 -- Ejercicio 1
 -- Seleccionar el nombre de los intérpretes 1 que no sean de México.
 
 -- Ejercicio 2
 -- Obtener el título de las canciones con más de 5 minutos de duración.
 SELECT titulo, duracion
-FROM industria_musical.cancion
+FROM cancion
 WHERE duracion >= '05:00';
 
 -- Ejercicio 3
@@ -96,7 +97,7 @@ WHERE duracion >= '05:00';
 -- Se desea saber cuales son las funciones que desempeñan los artistas y cuantos
 -- hay por cada funciones dentro de la base de datos
 SELECT funcion, COUNT(funcion)
-FROM pertenec   e
+FROM pertenece
 GROUP BY funcion;
 
 -- Ejercicio 27
