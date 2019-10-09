@@ -68,26 +68,55 @@ WHERE funcion = 'Guitarra' AND pais = 'España') as B;
 
 -- Ejercicio 11
 -- Obtener el título de las canciones de todos los discos del grupo U2
+SELECT titulo
+FROM cancion INNER JOIN esta ON cancion.cod = esta.codCan
+INNER JOIN disco ON esta.album = disco.album
+WHERE nombreInt = 'U2';
 
 -- Ejercicio 12
 -- Obtener el nombre del club con mayor número de fans indicando ese número.
+SELECT nombre
+FROM club
+ORDER BY numFans
+LIMIT 1;
 
 -- Ejercicio 13
 -- Obtener el género de los discos con mayor número de fans.
+SELECT genero, SUM(numfans) as numfans
+FROM disco as d
+INNER JOIN club as c ON d.nombreint = c.nombreint
+GROUP BY genero
+ORDER BY numfans DESC
+LIMIT 1;
 
 -- Ejercicio 14
 -- Obtener el número de discos de cada intérprete.
+SELECT COUNT(*)
+FROM disco
+GROUP BY nombreInt;
 
 -- Ejercicio 15
 -- Obtener el número de canciones que ha grabado cada compañía discográfica y
 -- su dirección.
+--SELECT COUNT(codCan), direccion
+--FROM cancion INNER JOIN esta INNER JOIN disco INNER JOIN disquera
+--GROUP BY disco.disquera;
 
 -- Ejercicio 16
 -- Obtener los nombre de los artistas de grupos con clubes de fans de más de 500
 -- personas y que el grupo sea de Inglaterra.
+SELECT artista.nombre
+FROM club INNER JOIN interprete ON club.nombreInt = interprete.nombreInt
+INNER JOIN pertenece ON interprete.nombreInt = pertenece.nombreInt
+INNER JOIN artista ON pertenece.curp = artista.curp
+WHERE numfans > 500 AND pais = 'Inglaterra';
 
 -- Ejercicio 17
 -- Obtener el nombre de los artistas que pertenezcan a un grupo de México.
+SELECT nombre
+FROM interprete INNER JOIN pertenece ON interprete.nombreInt = pertenece.nombreInt
+INNER JOIN artista ON pertenece.curp = artista.curp
+WHERE pais = 'México';
 
 -- Ejercicio 18
 -- Obtener el décimo (Debe haber sólo 9 por encima de el) club con mayor número
