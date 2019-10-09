@@ -121,13 +121,27 @@ WHERE pais = 'México';
 -- Ejercicio 18
 -- Obtener el décimo (Debe haber sólo 9 por encima de el) club con mayor número
 -- de fans indicando este número).
+SELECT nombre, numFans
+FROM club
+ORDER BY numFans
+OFFSET 9 LIMIT 1;
 
 -- Ejercicio 19
 -- Obtener el nombre de los artistas que tengan la función de bajo en un único grupo
 -- y que además este tenga más de dos miembros.
+SELECT nombre 
+FROM interprete INNER JOIN pertenece ON interprete.nombreInt = pertenece.nombreInt
+INNER JOIN artista ON pertenece.curp = artista.curp
+WHERE funcion = 'Bajo' AND 
+(SELECT COUNT(*)
+FROM interprete inter INNER JOIN pertenece per ON inter.nombreInt = per.nombreInt
+WHERE interprete.nombreInt = inter.nombreInt) > 2;
 
 -- Ejercicio 20
 -- Indica el nombre del compositor que más canciones ha creado y el título de estas.
+--SELECT nombreC, titulo
+--FROM compositor com INNER JOIN cancion can ON com.curpC = can.curpC
+--ORDER BY COUNT(*);
 
 -- Ejercicio 21
 -- Obtener el año en el que hubo mayor lanzamientos de discos.
@@ -139,6 +153,11 @@ WHERE pais = 'México';
 -- Ejercicio 23
 -- Obtener para cada artista el nombre de sus álbumes y las canciones de cada
 -- álbum.
+SELECT art.nombre, d.album, can.titulo
+FROM cancion can INNER JOIN esta ON can.cod = esta.codCan
+INNER JOIN disco d ON esta.numRef = d.numRef
+INNER JOIN pertenece per ON d.nombreInt = per.nombreInt
+INNER JOIN artista art ON per.curp = art.curp;
 
 -- Ejercicio 24
 -- Obtener para cada compositor la canción que aparece más veces en distintos
@@ -147,6 +166,11 @@ WHERE pais = 'México';
 -- Ejercicio 25
 -- Obtener los Clubs que sean fanáticos de grupos que tengan al menos un integran-
 -- te que tenga la función de bajo.
+SELECT nombre
+FROM club INNER JOIN interprete ON club.nombreInt = interprete.nombreInt
+WHERE (SELECT COUNT(*)
+	  	FROM interprete inter INNER JOIN pertenece ON inter.nombreInt = pertenece.nombreInt
+	  	WHERE pertenece.funcion = 'Bajo') > 0;
 
 -- Ejercicio 26
 -- Se desea saber cuales son las funciones que desempeñan los artistas y cuantos
@@ -158,7 +182,14 @@ GROUP BY funcion;
 -- Ejercicio 27
 -- Para cada intérprete se desea saber cuántos años han pasado desde que se conso-
 -- lidaron estos.
+SELECT nombreInt, 2019 - date_part('year', fechaCreacion) as edad
+FROM interprete;
 
 -- Ejercicio 28
 -- Para cada disco obtener el total de canciones que tiene este y además, agregar la
 -- duración de la canción más larga de cada disco.
+SET search_path TO industria_musical;
+SELECT d.album, COUNT(*), MAX(can.duracion)
+FROM disco d INNER JOIN esta ON d.numRef = esta.numRef
+INNER JOIN cancion can ON esta.codCan = can.cod
+GROUP BY d.album;
