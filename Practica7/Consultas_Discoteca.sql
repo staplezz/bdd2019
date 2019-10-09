@@ -1,44 +1,70 @@
 -- Sirve para buscar primero en el esquema industria_musical.
 SET search_path TO industria_musical;
 
--- Ejercicio 1
--- Seleccionar el nombre de los intérpretes 1 que no sean de México.
+--Ejercicio 1: Seleccionar el nombre de los intérpretes que no sean de México.
+SELECT nombreint
+FROM interprete
+WHERE pais NOT LIKE 'México';
 
--- Ejercicio 2
--- Obtener el título de las canciones con más de 5 minutos de duración.
-SELECT titulo, duracion
+--Ejercicio 2: Obtener el título de las canciones con más de 5 minutos de duración.
+SELECT titulo
 FROM cancion
 WHERE duracion >= '05:00';
 
--- Ejercicio 3
--- Obtener la lista de las distintas funciones que pueden realizar los artistas.
+--Ejercicio 3: Obtener la lista de las distintas funciones que pueden realizar los artistas.
+SELECT funcion
+FROM pertenece
+GROUP BY funcion;
 
--- Ejercicio 4
--- Seleccionar el nombre y el lugar de origen de los clubes con más de 500 fans.
+--Ejercicio 4: Seleccionar el nombre y el lugar de origen de los clubes con más de 500 fans.
+SELECT nombre, lugarorigen
+FROM club
+WHERE numfans > 500;
 
--- Ejercicio 5
--- Obtener el nombre y el lugar de origen de cada club de fans de intérpretes de
--- México así como el nombre del intérprete al que admiran.
+--Ejercicio 5: Obtener el nombre y el lugar de origen de cada club de fans de intérpretes de 
+--México así como el nombre del intérprete al que admiran.
+SELECT nombre, lugarorigen, nombreint
+FROM club
+WHERE lugarorigen = 'México';
 
--- Ejercicio 6
--- Obtener el nombre de los discos que contienen alguna canción que dure más de
--- 5 minutos y decir cuantas canciones del disco cumplen esto.
+--Ejercicio 6: Obtener el nombre de los discos que contienen alguna canción que dure más de
+--5 minutos y decir cuantas canciones del disco cumplen esto.
+SELECT album, COUNT(c) as numCanciones
+FROM cancion as c, esta as e
+WHERE c.cod = e.codcan AND duracion >= '05:00'
+GROUP BY album;
 
--- Ejercicio 7
--- Obtener los nombres de las canciones que dan nombre al disco en el que apare-
--- cen.
+--Ejercicio 7: Obtener los nombres de las canciones que dan nombre al disco en el que aparecen.
+SELECT titulo
+FROM cancion as c, esta as e
+WHERE titulo = album;
 
--- Ejercicio 8
--- Obtener los nombres de las disqueras y direcciones de aquellas compañías dis-
---queras que han grabado algún disco que empiece con ’T’.
+--Ejercicio 8: Obtener los nombres de las disqueras y direcciones de aquellas compañías disqueras 
+--que han grabado algún disco que empiece con ’T’.
+SELECT d.disquera, direccion
+FROM disco as d, disquera as disq
+WHERE d.origen_disquera = disq.origen_disquera AND album LIKE 'T%';
 
--- Ejercicio 9
--- Obtener el nombre de los discos de los intérpretes registrados en el año 1996.
+--Ejercicio 9: Obtener el nombre de los discos de los intérpretes registrados en el año 1996.
+SELECT album
+FROM interprete as i, disco as d
+WHERE EXTRACT(YEAR FROM fechacreacion) = 1996 and i.nombreint = d.nombreint;
 
--- Ejercicio 10
--- El dúo dinámico por fin se jubila; para sustituirlos se pretende hacer una selec-
--- ción sobre todos los pares de artistas españoles distintos tales que el primero sea
--- voz y el segundo guitarra. Obtener dicha selección.
+-- Ejercicio 10: El dúo dinámico por fin se jubila; para sustituirlos se pretende hacer una selección
+--sobre todos los pares de artistas españoles distintos tales que el primero sea
+--voz y el segundo guitarra. Obtener dicha selección.
+SELECT '[' || A.vozesp || ', ' || B.guitesp || ']' as duo
+FROM
+(SELECT nombre as vozesp
+FROM interprete as i
+INNER JOIN pertenece as p ON i.nombreint = p.nombreint
+INNER JOIN artista as a ON p.curp = a.curp
+WHERE funcion = 'Voz' AND pais = 'España') as A,
+(SELECT nombre as guitesp
+FROM interprete as i
+INNER JOIN pertenece as p ON i.nombreint = p.nombreint
+INNER JOIN artista as a ON p.curp = a.curp
+WHERE funcion = 'Guitarra' AND pais = 'España') as B;
 
 -- Ejercicio 11
 -- Obtener el título de las canciones de todos los discos del grupo U2
