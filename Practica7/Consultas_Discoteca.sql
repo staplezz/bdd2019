@@ -167,6 +167,12 @@ LIMIT 1) as A;
 -- Ejercicio 22
 -- Obtener para cada grupo con más de dos integrantes, el nombre y el número de
 -- componentes del grupo.
+SELECT interprete.nombreint as banda, COUNT(*) as numIntegrantes
+FROM pertenece
+INNER JOIN interprete ON interprete.nombreint = pertenece.nombreint
+GROUP BY banda
+HAVING COUNT(*) > 2
+ORDER BY numintegrantes;
 
 -- Ejercicio 23
 -- Obtener para cada artista el nombre de sus álbumes y las canciones de cada
