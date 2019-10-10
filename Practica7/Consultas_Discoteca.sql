@@ -75,7 +75,7 @@ WHERE nombreInt = 'U2';
 
 -- Ejercicio 12
 -- Obtener el nombre del club con mayor número de fans indicando ese número.
-SELECT nombre
+SELECT nombre, numFans
 FROM club
 ORDER BY numFans
 LIMIT 1;
