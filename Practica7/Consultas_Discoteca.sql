@@ -156,6 +156,13 @@ GROUP BY A.nombreC;
 
 -- Ejercicio 21
 -- Obtener el año en el que hubo mayor lanzamientos de discos.
+SELECT A.año
+FROM
+(SELECT COUNT(*) as qty, EXTRACT(YEAR FROM fechaL) as año
+FROM disco
+GROUP BY año
+ORDER BY qty DESC
+LIMIT 1) as A;
 
 -- Ejercicio 22
 -- Obtener para cada grupo con más de dos integrantes, el nombre y el número de
