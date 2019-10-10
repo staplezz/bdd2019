@@ -98,9 +98,13 @@ GROUP BY nombreInt;
 -- Ejercicio 15
 -- Obtener el número de canciones que ha grabado cada compañía discográfica y
 -- su dirección.
---SELECT COUNT(codCan), direccion
---FROM cancion INNER JOIN esta INNER JOIN disco INNER JOIN disquera
---GROUP BY disco.disquera;
+SELECT A.numCanciones, A.disquera, direccion
+FROM
+(SELECT COUNT(codcan) as numCanciones, disquera
+FROM disco
+INNER JOIN esta ON disco.album = esta.album
+GROUP BY disquera) as A
+INNER JOIN disquera ON A.disquera = disquera.disquera;
 
 -- Ejercicio 16
 -- Obtener los nombre de los artistas de grupos con clubes de fans de más de 500
