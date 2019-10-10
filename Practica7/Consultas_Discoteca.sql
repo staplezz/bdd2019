@@ -162,6 +162,12 @@ INNER JOIN artista art ON per.curp = art.curp;
 -- Ejercicio 24
 -- Obtener para cada compositor la canción que aparece más veces en distintos
 -- álbumes.
+SELECT nombreC, titulo
+FROM compositor as c
+INNER JOIN cancion as can ON c.curpc = can.curpc
+INNER JOIN esta as e ON can.cod = e.codcan
+GROUP BY nombreC, titulo
+HAVING COUNT(titulo) > 1;
 
 -- Ejercicio 25
 -- Obtener los Clubs que sean fanáticos de grupos que tengan al menos un integran-
