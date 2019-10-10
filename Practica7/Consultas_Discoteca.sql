@@ -143,9 +143,16 @@ WHERE interprete.nombreInt = inter.nombreInt) > 2;
 
 -- Ejercicio 20
 -- Indica el nombre del compositor que más canciones ha creado y el título de estas.
---SELECT nombreC, titulo
---FROM compositor com INNER JOIN cancion can ON com.curpC = can.curpC
---ORDER BY COUNT(*);
+SELECT A.nombreC as compositor,  '[' || string_agg(titulo, ',') || ']' as canciones
+FROM
+(SELECT COUNT(*) as numCanciones, nombreC, compositor.curpc as curp
+FROM compositor
+INNER JOIN cancion ON compositor.curpc = cancion.curpc
+GROUP BY nombreC, curp
+ORDER BY numCanciones DESC
+LIMIT 1) as A
+INNER JOIN cancion ON A.curp = cancion.curpc
+GROUP BY A.nombreC;
 
 -- Ejercicio 21
 -- Obtener el año en el que hubo mayor lanzamientos de discos.
