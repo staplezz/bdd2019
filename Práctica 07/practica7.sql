@@ -153,3 +153,37 @@ nombre_municipio = 'Tepoztlán' OR
 nombre_municipio = 'Batopilas' OR
 nombre_municipio = 'Arteaga' OR
 nombre_municipio = 'Viesca';
+
+--Ejercicio 7
+--Borrar todos los registros repetidos en tu tablas geografico_completo.
+
+-- Creamos una tabla temporal
+CREATE TABLE geografico_temp (LIKE geografico_completo);
+ 
+-- Insertamos en la tabla temporal los no repetidos
+INSERT INTO geografico_temp
+(
+	nombre_estado,
+	abreviatura,
+	cabecera_distrital_federal,
+	cabecera_distrital_local,
+	nombre_municipio,
+	seccion,
+	tipo
+)
+SELECT
+DISTINCT 
+	nombre_estado,
+	abreviatura,
+	cabecera_distrital_federal,
+	cabecera_distrital_local,
+	nombre_municipio,
+	seccion,
+	tipo
+FROM geografico_completo; 
+
+-- Hacemos DROP de la tabla
+DROP TABLE geografico_temp;
+
+ALTER TABLE geografico_temp 
+RENAME TO geografico_completo; 
