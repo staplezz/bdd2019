@@ -88,3 +88,38 @@ COMMENT ON CONSTRAINT idSeccion ON Seccion IS 'La llave primaria compuesta de la
 COMMENT ON CONSTRAINT cabecera_distrital_federal ON Seccion IS 'La llave foranea que es la Cabecera Distrital Federal asociado a cada seccion';
 COMMENT ON CONSTRAINT cabecera_distrital_local ON Seccion IS 'La llave foranea que es la Cabecera Distrital Local asociado a cada seccion';
 COMMENT ON CONSTRAINT nombre_municipio ON Seccion IS 'La llave foranea que es el municipio asociado a cada seccion';
+
+--Para pasar toda la información a la nueva tabla normalizada.
+
+--Abreviaturas
+INSERT INTO Abreviatura
+SELECT DISTINCT nombre_estado, abreviatura
+FROM geografico_completo
+WHERE nombre_estado IS NOT NULL AND abreviatura IS NOT NULL;
+
+--Municipios
+INSERT INTO Municipio
+SELECT DISTINCT nombre_municipio, nombre_estado
+FROM geografico_completo
+WHERE nombre_estado IS NOT NULL AND abreviatura IS NOT NULL;
+
+--Cabecera distrital federal
+INSERT INTO CabeceraDF
+SELECT DISTINCT cabecera_distrital_federal, nombre_estado
+FROM geografico_completo
+WHERE cabecera_distrital_federal IS NOT NULL AND nombre_estado IS NOT NULL;
+
+--Cabecera distrital local
+INSERT INTO CabeceraDL
+SELECT DISTINCT cabecera_distrital_local, nombre_estado
+FROM geografico_completo
+WHERE cabecera_distrital_local IS NOT NULL AND nombre_estado IS NOT NULL;
+
+--Secciones
+INSERT INTO Seccion
+SELECT DISTINCT nombre_estado, seccion, tipo, cabecera_distrital_federal,
+cabecera_distrital_local, nombre_municipio
+FROM geografico_completo
+WHERE nombre_estado IS NOT NULL AND seccion IS NOT NULL AND tipo IS NOT NULL
+AND cabecera_distrital_federal IS NOT NULL AND cabecera_distrital_local IS NOT NULL
+AND nombre_municipio IS NOT NULL;
