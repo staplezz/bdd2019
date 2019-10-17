@@ -17,7 +17,7 @@ COMMENT ON CONSTRAINT nombre_estado ON Abreviatura IS 'La llave primaria que es 
 CREATE TABLE Municipio (
 	nombre_municipio varchar(50) NOT NULL,
 	nombre_estado varchar(50) NOT NULL,
-	CONSTRAINT nombre_municipio PRIMARY KEY(nombre_municipio),
+	CONSTRAINT idMunicipio PRIMARY KEY(nombre_municipio, nombre_estado),
 	CONSTRAINT nombre_estado FOREIGN KEY(nombre_estado) REFERENCES Abreviatura(nombre_estado)
 );
 
@@ -25,14 +25,14 @@ CREATE TABLE Municipio (
 COMMENT ON TABLE Municipio IS 'Para representar los municipios de un estado';
 COMMENT ON COLUMN Municipio.nombre_municipio IS 'Nombre del municipio';
 COMMENT ON COLUMN Municipio.nombre_estado IS 'El nombre del estado al que pertenece el municipio';
-COMMENT ON CONSTRAINT nombre_municipio ON Municipio IS 'La llave primaria que es el municipio asociado a cada estado';
+COMMENT ON CONSTRAINT idMunicipio ON Municipio IS 'La llave primaria compuesta que es el municipio asociado a cada estado';
 COMMENT ON CONSTRAINT nombre_estado ON Municipio IS 'La llave foranea que es el estado asociado a cada municipio';
 
 --Tabla Cabecera Distrital Local
 CREATE TABLE CabeceraDL (
 	cabecera_distrital_local varchar(50) NOT NULL,
 	nombre_estado varchar(50) NOT NULL,
-	CONSTRAINT cabecera_distrital_local PRIMARY KEY(cabecera_distrital_local),
+	CONSTRAINT idCabeceraDL PRIMARY KEY(cabecera_distrital_local, nombre_estado),
 	CONSTRAINT nombre_estado FOREIGN KEY(nombre_estado) REFERENCES Abreviatura(nombre_estado)
 );
 
@@ -40,14 +40,14 @@ CREATE TABLE CabeceraDL (
 COMMENT ON TABLE geografico.CabeceraDL IS 'Para representar las Cabecera Distrital Local de un estado';
 COMMENT ON COLUMN CabeceraDL.cabecera_distrital_local IS 'Cabecera Distrital Local de un estado';
 COMMENT ON COLUMN CabeceraDL.nombre_estado IS 'El nombre del estado al que pertenece el Cabecera Distrital Local';
-COMMENT ON CONSTRAINT cabecera_distrital_local ON CabeceraDL IS 'La llave primaria que es la Cabecera Distrital Local asociado a cada estado';
+COMMENT ON CONSTRAINT idCabeceraDL ON CabeceraDL IS 'La llave primaria compuest que es la Cabecera Distrital Local asociado a cada estado';
 COMMENT ON CONSTRAINT nombre_estado ON CabeceraDL IS 'La llave foranea que es el estado asociado a cada Cabecera Distrital Local';
 
 --Tabla Cabecera Distrital Federal
 CREATE TABLE CabeceraDF (
 	cabecera_distrital_federal varchar(50) NOT NULL,
 	nombre_estado varchar(50) NOT NULL,
-	CONSTRAINT cabecera_distrital_federal PRIMARY KEY(cabecera_distrital_federal),
+	CONSTRAINT idCabeceraDF PRIMARY KEY(cabecera_distrital_federal, nombre_estado),
 	CONSTRAINT nombre_estado FOREIGN KEY(nombre_estado) REFERENCES Abreviatura(nombre_estado)
 );
 
@@ -55,7 +55,7 @@ CREATE TABLE CabeceraDF (
 COMMENT ON TABLE CabeceraDF IS 'Para representar las Cabecera Distrital Federal de un estado';
 COMMENT ON COLUMN CabeceraDF.cabecera_distrital_federal IS 'Cabecera Distrital Federal de un estado';
 COMMENT ON COLUMN CabeceraDL.nombre_estado IS 'El nombre del estado al que pertenece el Cabecera Distrital Federal';
-COMMENT ON CONSTRAINT cabecera_distrital_federal ON CabeceraDF IS 'La llave primaria que es la Cabecera Distrital Federal asociado a cada estado';
+COMMENT ON CONSTRAINT idCabeceraDF ON CabeceraDF IS 'La llave primaria compuesta que es la Cabecera Distrital Federal asociado a cada estado';
 COMMENT ON CONSTRAINT nombre_estado ON CabeceraDF IS 'La llave foranea que es el estado asociado a cada Cabecera Distrital Federal';
 
 --Tabla Secciones
@@ -66,11 +66,14 @@ CREATE TABLE Seccion (
 	cabecera_distrital_federal varchar(50) NOT NULL,
 	cabecera_distrital_local varchar(50) NOT NULL,
 	nombre_municipio varchar(50) NOT NULL,
-	CONSTRAINT idSeccion PRIMARY KEY(nombre_estado, seccion, tipo),
-	CONSTRAINT cabecera_distrital_federal FOREIGN KEY(cabecera_distrital_federal) REFERENCES CabeceraDF(cabecera_distrital_federal),
-	CONSTRAINT cabecera_distrital_local FOREIGN KEY(cabecera_distrital_local) REFERENCES CabeceraDL(cabecera_distrital_local),
-	CONSTRAINT nombre_municipio FOREIGN KEY(nombre_municipio) REFERENCES Municipio(nombre_municipio)
-	
+	CONSTRAINT idSeccion PRIMARY KEY(nombre_estado, seccion, tipo, cabecera_distrital_federal
+					,cabecera_distrital_local, nombre_municipio),
+	CONSTRAINT cabecera_distrital_federal FOREIGN KEY(cabecera_distrital_federal, nombre_estado) 
+	REFERENCES CabeceraDF(cabecera_distrital_federal, nombre_estado),
+	CONSTRAINT cabecera_distrital_local FOREIGN KEY(cabecera_distrital_local, nombre_estado) 
+	REFERENCES CabeceraDL(cabecera_distrital_local, nombre_estado),
+	CONSTRAINT nombre_municipio FOREIGN KEY(nombre_municipio, nombre_estado) 
+	REFERENCES Municipio(nombre_municipio, nombre_estado)
 );
 
 --Comentarios de la tabla Seccion.
