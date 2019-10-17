@@ -16,7 +16,7 @@ COMMENT ON CONSTRAINT nombre_estado ON Abreviatura IS 'La llave primaria que es 
 --Tabla Municipio
 CREATE TABLE Municipio (
 	nombre_municipio varchar(50) NOT NULL,
-	nombre_estado varchar(10) NOT NULL,
+	nombre_estado varchar(50) NOT NULL,
 	CONSTRAINT nombre_municipio PRIMARY KEY(nombre_municipio),
 	CONSTRAINT nombre_estado FOREIGN KEY(nombre_estado) REFERENCES Abreviatura(nombre_estado)
 );
@@ -31,7 +31,7 @@ COMMENT ON CONSTRAINT nombre_estado ON Municipio IS 'La llave foranea que es el 
 --Tabla Cabecera Distrital Local
 CREATE TABLE CabeceraDL (
 	cabecera_distrital_local varchar(50) NOT NULL,
-	nombre_estado varchar(10) NOT NULL,
+	nombre_estado varchar(50) NOT NULL,
 	CONSTRAINT cabecera_distrital_local PRIMARY KEY(cabecera_distrital_local),
 	CONSTRAINT nombre_estado FOREIGN KEY(nombre_estado) REFERENCES Abreviatura(nombre_estado)
 );
@@ -46,7 +46,7 @@ COMMENT ON CONSTRAINT nombre_estado ON CabeceraDL IS 'La llave foranea que es el
 --Tabla Cabecera Distrital Federal
 CREATE TABLE CabeceraDF (
 	cabecera_distrital_federal varchar(50) NOT NULL,
-	nombre_estado varchar(10) NOT NULL,
+	nombre_estado varchar(50) NOT NULL,
 	CONSTRAINT cabecera_distrital_federal PRIMARY KEY(cabecera_distrital_federal),
 	CONSTRAINT nombre_estado FOREIGN KEY(nombre_estado) REFERENCES Abreviatura(nombre_estado)
 );
