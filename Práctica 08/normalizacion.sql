@@ -123,3 +123,7 @@ FROM geografico_completo
 WHERE nombre_estado IS NOT NULL AND seccion IS NOT NULL AND tipo IS NOT NULL
 AND cabecera_distrital_federal IS NOT NULL AND cabecera_distrital_local IS NOT NULL
 AND nombre_municipio IS NOT NULL;
+
+--Borra la tabla original.
+--Quitar comentario si es necesario.
+--DROP TABLE geografico_completo
