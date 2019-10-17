@@ -1,3 +1,5 @@
+SET search_path TO geografico;
+
 --Tabla Abreviatura.
 CREATE TABLE Abreviatura (
 	nombre_estado varchar(50) NOT NULL,
@@ -35,7 +37,7 @@ CREATE TABLE CabeceraDL (
 );
 
 --Comentarios de la tabla Cabecera Distrital Local.
-COMMENT ON TABLE CabeceraDL IS 'Para representar las Cabecera Distrital Local de un estado';
+COMMENT ON TABLE geografico.CabeceraDL IS 'Para representar las Cabecera Distrital Local de un estado';
 COMMENT ON COLUMN CabeceraDL.cabecera_distrital_local IS 'Cabecera Distrital Local de un estado';
 COMMENT ON COLUMN CabeceraDL.nombre_estado IS 'El nombre del estado al que pertenece el Cabecera Distrital Local';
 COMMENT ON CONSTRAINT cabecera_distrital_local ON CabeceraDL IS 'La llave primaria que es la Cabecera Distrital Local asociado a cada estado';
