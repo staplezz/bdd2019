@@ -53,3 +53,37 @@ COMMENT ON COLUMN Automovil3.Color IS 'El color del automóvil';
 COMMENT ON COLUMN Automovil3.numPuertas IS 'El número de puertas del automóvil';
 COMMENT ON CONSTRAINT autoprecioid ON Automovil3 IS 'La llave primaria representada por la submarca, año, color y número de puertas.';
 COMMENT ON CONSTRAINT Submarca ON Automovil3 IS 'La llave foránea asociada a la submarca de un automóvil.';
+
+--Para pasar toda la información a la nueva tabla normalizada.
+
+--Marcas y Submarcas: Automovil2
+INSERT INTO Automovil2
+SELECT DISTINCT Marca, Submarca
+FROM Automovil;
+
+--Automoviles con placas: Automovil1
+INSERT INTO Automovil1
+SELECT DISTINCT Placas, Submarca, Año, Color, numPuertas
+FROM Automovil;
+
+--Precios de los automóviles: Automovil3
+INSERT INTO Automovil3
+SELECT DISTINCT PrecioFactura, Submarca, Año, Color, numPuertas
+FROM Automovil;
+
+--Modificamos las referencias de las tablas Viaje y Manejar.
+ALTER TABLE Viaje
+DROP CONSTRAINT Placas;
+
+ALTER TABLE Manejar
+DROP CONSTRAINT Placas;
+
+--Volvemos a agregar las restricciones.
+ALTER TABLE Viaje
+ADD CONSTRAINT Placas FOREIGN KEY(Placas) REFERENCES Automovil1(Placas);
+
+ALTER TABLE Manejar
+ADD CONSTRAINT Placas FOREIGN KEY(Placas) REFERENCES Automovil1(Placas);
+
+--Borra la tabla original.
+DROP TABLE automovil;
