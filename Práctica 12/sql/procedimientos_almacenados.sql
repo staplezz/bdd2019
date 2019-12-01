@@ -96,10 +96,10 @@ BEGIN
 	ON p.idViaje = v.idViaje
 	INNER JOIN Tarjeta t
 	ON t.idCliente = v.idCliente
-	WHERE v.idCliente = infoTarjeta.idCliente
+	WHERE v.idCliente = $1
 	GROUP BY puntos;
 END; $$
 LANGUAGE 'plpgsql';
 						
 --Ejemplo:
-SELECT * FROM infoTarjeta(2);
+SELECT * FROM infoTarjeta(1);
