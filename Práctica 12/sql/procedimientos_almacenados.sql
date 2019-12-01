@@ -103,3 +103,17 @@ LANGUAGE 'plpgsql';
 						
 --Ejemplo:
 SELECT * FROM infoTarjeta(1);
+
+/* Ejercicio 5
+* Calcula el costo por kilómetro recorrido, esto lo calculamos con costos / kms, donde
+* noViajes es el número de viajes realizadaos y kilomRecorridos la suma de todos los kilómetros que ha
+* recorrido.
+*/
+CREATE OR REPLACE FUNCTION costoKm()
+RETURNS numeric AS
+'SELECT SUM(costo)/SUM(kilometros) 
+FROM viaje'
+LANGUAGE 'sql';
+
+--Ejemplo:
+SELECT costoKM();
