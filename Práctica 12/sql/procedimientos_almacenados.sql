@@ -78,3 +78,28 @@ $$ language PLPGSQL;
 DO $$ BEGIN
 	PERFORM registra_viaje('Tepito', 'Portales', interval '01:00:00', 11, 70, 'debito', 1, 1);
 END $$;
+						
+/* Ejercicio 4
+ * Regresa una tabla con el saldo de la tarjeta, la cantidad de viajes que no se han pagado como
+ * puntos y la cantidad de los que no se pagaron con tarjeta.
+*/
+CREATE OR REPLACE FUNCTION infoTarjeta(idCliente integer) 
+   RETURNS TABLE (
+      saldoPuntos integer,
+      pagadoSinTarjeta bigint,
+      pagadoConTarjeta bigint) 
+AS $$
+BEGIN
+   RETURN QUERY SELECT
+	puntos, COUNT(*) - COUNT(montopuntos),  COUNT(montopuntos)
+	FROM Pagos p INNER JOIN Viaje v
+	ON p.idViaje = v.idViaje
+	INNER JOIN Tarjeta t
+	ON t.idCliente = v.idCliente
+	WHERE v.idCliente = infoTarjeta.idCliente
+	GROUP BY puntos;
+END; $$
+LANGUAGE 'plpgsql';
+						
+--Ejemplo:
+SELECT * FROM infoTarjeta(2);
