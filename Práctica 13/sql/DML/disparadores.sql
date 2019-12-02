@@ -52,12 +52,48 @@ Un disparador el cual se encargue de guardar la fecha en que se realiza el pago
 de un viaje, esto quiere decir que no importa el valor que se manda en el insert
 de la fecha, siempre pondrá la fecha el disparador.
 */
+CREATE OR REPLACE FUNCTION fechaViaje()
+RETURNS TRIGGER AS
+$$
+BEGIN
+	NEW.fechaPago := current_date;
+	RETURN NEW;
+END;
+$$ language PLPGSQL;
+
+CREATE TRIGGER fechaViajes
+BEFORE INSERT
+ON Viaje
+FOR EACH ROW
+EXECUTE PROCEDURE fechaViaje();
 
 /*
 Ejercicio 3:
 Un disparador el cual se encargue de validar que un chofer no puede realizar mas
 de 35 viajes al día.
 */
+CREATE OR REPLACE FUNCTION maximoViaje()
+RETURNS TRIGGER AS
+$$
+DECLARE
+  numViajes int;
+BEGIN
+	SELECT COUNT(*) INTO numViajes
+	FROM Viaje
+	WHERE idConductor = NEW.idConductor;
+	IF (numViajes + 1) <= 35 THEN
+		RETURN NEW;
+	ELSE
+		RAISE EXCEPTION 'Un conductor no puede hacer más de 35 viajes al día.';
+	END IF;
+END;
+$$ language PLPGSQL;
+
+CREATE TRIGGER maximoViajes
+BEFORE INSERT
+ON Viaje
+FOR EACH ROW
+EXECUTE PROCEDURE maximoViaje();
 
 /*
 Ejercicio 4:
