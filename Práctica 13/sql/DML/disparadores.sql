@@ -151,3 +151,39 @@ Ejercicio 5:
 Un disparador el cual se encargue de que ningún coche en la tabla manejar tenga
 más de una fecha de término indeterminada.
 */
+CREATE OR REPLACE FUNCTION revisaAuto()
+RETURNS TRIGGER AS
+$$
+DECLARE
+	registrosfechaInic int;
+	registrosfechaFin int;
+BEGIN
+	-- Si tiene fecha de fin de manejo.
+	IF NEW.fechaFin IS NOT NULL THEN
+		RETURN NEW;
+	END IF;
+
+	--Obtenemos los registros de inicio de manejo del auto.
+	SELECT COUNT(fechaInic) INTO registrosfechaInic
+	FROM Manejar
+	WHERE Placas = NEW.Placas;
+
+	--Obtenemos los registros de fin de manejo del auto.
+	SELECT COUNT(fechaFin) INTO registrosfechaFin
+	FROM Manejar
+	WHERE Placas = NEW.Placas;
+	
+	IF registrosfechaInic = registrosfechaFin THEN
+		RETURN NEW;
+	ELSE
+		RAISE EXCEPTION 'Un auto no puede ser manejado por dos personas al mismo tiempo.'
+		USING HINT = 'Intenta actualizar la fecha de manejo del auto.';
+	END IF;
+END;
+$$ language PLPGSQL;
+
+CREATE TRIGGER revisaAutoTGR
+BEFORE INSERT OR UPDATE
+ON Manejar
+FOR EACH ROW
+EXECUTE PROCEDURE revisaAuto();
