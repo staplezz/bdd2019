@@ -27,9 +27,27 @@ DO $$ BEGIN
 			       '5564652467');
 END $$;
 								      
---Ejercicio 2
---Elimina un chofer y elimina los valores de las tablas hijas a excepción de la tabla Viajes.
---TODO.
+--Ejercicio 2.
+--Elimina a un chofer de la base de datos y a las tablas a las que hace referencia
+--pero deja las de viaje y cambia el id del chofer a NULL.
+CREATE OR REPLACE
+FUNCTION elimina_chofer(idConductor integer)
+RETURNS void AS $$
+BEGIN
+  DELETE FROM Manejar
+  WHERE Manejar.idConductor = $1;
+  UPDATE Viaje
+  SET idConductor = NULL
+  WHERE Viaje.idConductor = $1;
+  DELETE FROM Conductor
+  WHERE Conductor.idConductor = $1;
+END;
+$$ LANGUAGE PLPGSQL;
+
+--Ejemplo:
+DO $$ BEGIN
+	PERFORM elimina_chofer(1);
+END $$;
 
 --Ejercicio 3
 --Registra el viaje de un usuario con un conductor. Además actualiza la tarjeta de puntos dependiendo de los
