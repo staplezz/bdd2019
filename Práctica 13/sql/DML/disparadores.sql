@@ -24,7 +24,7 @@ BEGIN
 	--Guardamos las placas que ha manejado hoy el conductor.
 	SELECT placas INTO placasHoy
 	FROM Viaje
-	WHERE idConductor = NEW.idConductor AND Viaje.fechaPago = NEW.fechaPago
+	WHERE idConductor = NEW.idConductor AND fechaPago = NEW.fechaPago
 	LIMIT 1;
 	IF NOT FOUND THEN
 		RETURN NEW;
