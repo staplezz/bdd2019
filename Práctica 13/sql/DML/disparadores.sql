@@ -100,6 +100,51 @@ Ejercicio 4:
 Un disparador el cual se encarge de validar que al realizar un pago con la tarjeta
 de puntos, revise que haya saldo disponible y si no, rechazar el pago.
 */
+CREATE OR REPLACE FUNCTION pagoPuntos()
+RETURNS TRIGGER AS
+$$
+DECLARE
+	idCli int;
+	saldoPuntos int;
+	saldoFinal int;
+BEGIN
+	--Si no se quiere hacer un pago con la tarjeta de puntos.
+	IF NEW.montoPuntos IS NULL OR NEW.montoPuntos = 0 THEN
+		RETURN NEW;
+	END IF;
+
+	--Obtenemos el id del cliente que paga.
+	SELECT idCliente INTO idCli
+	FROM Viaje
+	WHERE idViaje = NEW.idViaje;
+
+	--Obtenemos el saldo de la tarjeta de puntos.
+	SELECT puntos INTO saldoPuntos
+	FROM Tarjeta
+	WHERE Tarjeta.idCliente = idCli;
+
+	--Si el saldo no alcanza para pagar la parte de un viaje
+	--rechazamos el pago.
+	saldoFinal := saldoPuntos - NEW.montoPuntos;
+	IF saldoFinal >= 0 THEN
+		--Actualizamos tarjeta
+		UPDATE Tarjeta
+		SET puntos = saldoFinal
+		WHERE Tarjeta.idCliente = idCli;
+		--Regresamos el valor.
+		RETURN NEW;
+	ELSE
+		RAISE EXCEPTION 'El saldo de la tarjeta de puntos no es suficiente.'
+		USING HINT = 'Intenta pagar con otro método de pago.';
+	END IF;
+END;
+$$ language PLPGSQL;
+
+CREATE TRIGGER pagoPuntosTRG
+BEFORE INSERT
+ON Pagos
+FOR EACH ROW
+EXECUTE PROCEDURE pagoPuntos();
 
 /*
 Ejercicio 5:
