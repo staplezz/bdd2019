@@ -84,3 +84,23 @@ DO $$ BEGIN
         '1998-05-04', 'Saratoga 1023','anaRoma@fakemail.com',
              '5541459967');
 END $$;
+
+--Procedimiento A. 3:
+--Ingresa un nuevo método de pago bancario para un cliente.
+
+--Procedimiento A. 4:
+--Registra el viaje de un usuario con un conductor. 
+--Además actualiza la tarjeta de puntos dependiendo de los
+--km recorridos y el número de viajes totales.
+
+--Procedimiento A. 5:
+--Registra un conductor junto con el auto que va a manejar.
+--Si se usa este procedimiento le asigna 15 días para manejarlo
+--desde la fecha de inicio.
+
+--Procedimiento A. 6:
+--Paga un viaje usando la tarjeta de puntos de un cliente.
+--En caso de no contar con suficiente crédito se avisa.
+
+--Procedimiento A. 7:
+--Paga un viaje usando una tarjeta bancaria.
