@@ -81,7 +81,8 @@ CREATE TABLE Tarjeta (
   	CONSTRAINT idTarjeta PRIMARY KEY(idTarjeta),
   	CONSTRAINT idClienteT FOREIGN KEY(idCliente) REFERENCES Cliente(idCliente)
   	ON UPDATE CASCADE
-  	ON DELETE CASCADE
+  	ON DELETE CASCADE,
+  	CONSTRAINT revisaTipo CHECK(tipo in ('puntos', 'credito', 'debito'))
 );
 
 --Comentarios de la tabla Tarjeta.
@@ -181,7 +182,8 @@ CREATE TABLE Viaje (
   	ON DELETE SET NULL,
   	CONSTRAINT placasVFK FOREIGN KEY(Placas) REFERENCES Automovil(Placas)
   	ON UPDATE CASCADE
-  	ON DELETE SET NULL
+  	ON DELETE SET NULL,
+  	CONSTRAINT minimoPago CHECK(costo >= 30)
 );
 
 COMMENT ON TABLE Viaje IS 'Para representar un viaje de la empresa';
@@ -235,7 +237,8 @@ CREATE TABLE TarjetaBancaria (
   CONSTRAINT idTarjetaBancaria PRIMARY KEY(idTarjetaBancaria),
   CONSTRAINT idTBFK FOREIGN KEY(idTarjeta) REFERENCES Tarjeta(idTarjeta)
   ON UPDATE CASCADE
-  ON DELETE CASCADE
+  ON DELETE CASCADE,
+  CONSTRAINT expirada CHECK(Expiracion >= current_date)
 );
 
 --Comentarios de la tabla Tarjeta Bancaria.
