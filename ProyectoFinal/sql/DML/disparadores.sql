@@ -169,7 +169,7 @@ EXECUTE PROCEDURE validaViaje();
 
 --Disparador 5:
 --Disparador que avisa si un viaje aún no ha sido pagado en su totalidad.
---Y si no cuánto es lo que falta por pagar.
+--Y si no cuánto es lo que falta por pagar. Si ya se pago en su totalidad no inserta.
 CREATE OR REPLACE FUNCTION validaPagos()
 RETURNS trigger AS
 $$
@@ -190,16 +190,26 @@ BEGIN
 
 	faltante := costoViaje - sumaPagos;
 
-	IF faltante <= 0 THEN
-		RAISE NOTICE 'Viaje pagado en su totalidad.';
-		RETURN NEW;
-	ELSE 
+	IF faltante = 0 THEN
+		RAISE EXCEPTION 'El viaje ya ha sido pagado en su totalidad.';
+	END IF;
+
+	--Calculamos cuanto pagar.
+	faltante := faltante - NEW.monto;
+
+	IF faltante > 0 THEN
 		RAISE NOTICE 'Faltan $% para completar el pago', faltante;
+		RETURN NEW;
+
+	ELSEIF faltante <= 0 THEN
+		NEW.monto := NEW.monto + faltante;
+		RAISE NOTICE 'Viaje pagado en su totalidad.';
 		RETURN NEW;
 	END IF;
 END;
 $$
 language PLPGSQL;
+
 
 CREATE TRIGGER validaPagos
 BEFORE INSERT
