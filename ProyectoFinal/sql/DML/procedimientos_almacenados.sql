@@ -44,12 +44,14 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
---Ejemplo:
+/**
+Ejemplo:
 DO $$ BEGIN
   PERFORM registra_cliente('Eric', 'Francisco', 'Cortés', 
         '1998-01-13', 'Pablo González','kokofrankt@fakemail.com',
              '5545012653');
 END $$;
+*/
 
 --Procedimiento A. 2:
 --Recibe la información de un conductor la almacena en la
@@ -81,12 +83,14 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
---Ejemplo:
+/**
+Ejemplo:
 DO $$ BEGIN
   PERFORM registra_conductor('Paola', 'Gallegos', 'Salgado', 
         '1998-05-04', 'Saratoga 1023','kokofrank@fakemail.com',
              '5541109967');
 END $$;
+*/
 
 --Procedimiento A. 3:
 --Ingresa un nuevo método de pago bancario para un cliente.
@@ -111,9 +115,11 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
+/**
 DO $$ BEGIN
     PERFORM registra_tarjeta(1, 'credito', '4766273849308783', 'BBVA', '2020-07-15');
 END $$;
+*/
 
 --Procedimiento A. 4:
 --Registra el viaje de un usuario con un conductor. 
@@ -159,10 +165,12 @@ BEGIN
 END;
 $$ language PLPGSQL;
 
---Ejemplo:
+/**
+Ejemplo:
 DO $$ BEGIN
   PERFORM registra_viaje('Tepito', 'Portales', interval '01:00:00', 11, 70, 2, 1);
 END $$;
+*/
 
 --Procedimiento A. 5:
 --Registra un conductor junto con el auto que va a manejar.
@@ -185,9 +193,11 @@ END;
 $$
 language PLPGSQL;
 
+/**
 DO $$ BEGIN
     PERFORM asigna_auto(1, '123456', current_date, NULL);
 END $$;
+*/
 
 --Procedimiento A. 6:
 --Registra el pago de un viaje usando el método de pago
@@ -202,7 +212,7 @@ DECLARE
 	idCl integer;
 	idTarjetaPuntos integer;
 BEGIN
-	IF metodo = 'efectivo' THEN
+	IF metodo LIKE 'efectivo' THEN
 		INSERT INTO Pago VALUES(DEFAULT, idViaje, NULL, monto);
 	--Si el pago es crédito o débito intentaremos pagar 
 	--con la tarjeta que encontremos si no recibimos un número de tarjeta.
@@ -245,7 +255,9 @@ END;
 $$
 language PLPGSQL;
 
---Ejemplo:
+/**
+Ejemplo:
 DO $$ BEGIN
   PERFORM registra_pago(1, 'credito', 30, '4766273849308783');
 END $$; 
+*/
