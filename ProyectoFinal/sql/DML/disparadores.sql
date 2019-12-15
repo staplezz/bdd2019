@@ -73,57 +73,7 @@ ON Manejar
 FOR EACH ROW
 EXECUTE PROCEDURE revisaAuto();
 
-
 --Disparador 3:
---Un disparador el cual se encarge de validar que al realizar un pago con la tarjeta
---de puntos, revise que haya saldo disponible y si no, rechazar el pago.
-CREATE OR REPLACE FUNCTION pagoPuntos()
-RETURNS TRIGGER AS
-$$
-DECLARE
-	--El tipo de la tarjeta.
-	tipoT varchar;
-	saldoPuntos int;
-	saldoFinal int;
-BEGIN
-	--Verificamos si el pago es con la tarjeta virtual.
-	SELECT tipo INTO tipoT
-	FROM Tarjeta
-	WHERE idTarjeta = NEW.idTarjeta;
-
-	IF tipoT <> 'puntos' THEN
-		RETURN NEW;
-	END IF;
-
-	--Si no, verificamos cuánto saldo tiene el cliente.
-	SELECT puntos INTO saldoPuntos
-	FROM TarjetaDePuntos
-	WHERE idTarjeta = NEW.idTarjeta;
-
-	--Si el saldo no alcanza para pagar la parte de un viaje
-	--rechazamos el pago.
-	saldoFinal := saldoPuntos - NEW.monto;
-	IF saldoFinal >= 0 THEN
-		--Actualizamos tarjeta
-		UPDATE TarjetaDePuntos
-		SET puntos = saldoFinal
-		WHERE idTarjeta = NEW.idTarjeta;
-		--Regresamos el valor.
-		RETURN NEW;
-	ELSE
-		RAISE EXCEPTION 'El saldo de la tarjeta de puntos no es suficiente.'
-		USING HINT = 'Intenta pagar con otro método de pago.';
-	END IF;
-END;
-$$ language PLPGSQL;
-
-CREATE TRIGGER pagoPuntosTGR
-BEFORE INSERT
-ON Pago
-FOR EACH ROW
-EXECUTE PROCEDURE pagoPuntos();
-
---Disparador 4:
 --Un disparador el cual se encargue de validar que los viajes realizados por un
 --chofer siempre deben ser con el mismo automóvil durante el mismo día, estos
 --quiere decir que un chofer no puede realizar viajes con diferentes automóviles
@@ -167,16 +117,20 @@ ON Viaje
 FOR EACH ROW
 EXECUTE PROCEDURE validaViaje();
 
---Disparador 5:
---Disparador que avisa si un viaje aún no ha sido pagado en su totalidad.
---Y si no cuánto es lo que falta por pagar. Si ya se pago en su totalidad no inserta.
+--Disparador 4 y 5:
+--Disparador que se encarga de validar los pagos y avisar cuanto falta por pagar
+--de ese viaje.
 CREATE OR REPLACE FUNCTION validaPagos()
-RETURNS trigger AS
+RETURNS TRIGGER AS
 $$
 DECLARE
 	sumaPagos bigint;
 	costoViaje int;
 	faltante int;
+	--El tipo de la tarjeta.
+	tipoT varchar;
+	saldoPuntos int;
+	saldoFinal int;
 BEGIN
 	--Pagos que se han hecho hasta el momento.
 	SELECT SUM(monto) INTO sumaPagos
@@ -190,26 +144,63 @@ BEGIN
 
 	faltante := costoViaje - sumaPagos;
 
+	--No insertamos ya que el viaje ya está pagado.
 	IF faltante = 0 THEN
 		RAISE EXCEPTION 'El viaje ya ha sido pagado en su totalidad.';
 	END IF;
 
-	--Calculamos cuanto pagar.
+	--Calculamos cuanto falta pagar.
 	faltante := faltante - NEW.monto;
 
+	--Avisamos cuanto falta por pagar.
 	IF faltante > 0 THEN
 		RAISE NOTICE 'Faltan $% para completar el pago', faltante;
-		RETURN NEW;
-
+	--Si el pago es mayor a lo que se debe, solo paga lo necesario.
 	ELSEIF faltante <= 0 THEN
+		--Actualizamos el monto.
 		NEW.monto := NEW.monto + faltante;
 		RAISE NOTICE 'Viaje pagado en su totalidad.';
+	END IF;
+
+	--Si el pago es en efectivo.
+	IF NEW.idTarjeta IS NULL THEN
 		RETURN NEW;
+	END IF;
+
+	--Verificamos que tipo de pago es.
+	SELECT tipo INTO tipoT
+	FROM Tarjeta
+	WHERE idTarjeta = NEW.idTarjeta;
+
+	--Si el pago es con debito o crédito.
+	IF tipoT = 'credito' OR tipoT = 'debito' THEN
+		RETURN NEW;
+	END IF;
+
+	IF tipoT = 'puntos' THEN
+		--verificamos cuánto saldo tiene el cliente.
+		SELECT puntos INTO saldoPuntos
+		FROM TarjetaDePuntos
+		WHERE idTarjeta = NEW.idTarjeta;
+
+		--Si el saldo no alcanza para pagar la parte de un viaje
+		--rechazamos el pago.
+		saldoFinal := saldoPuntos - NEW.monto;
+		IF saldoFinal >= 0 THEN
+			--Actualizamos tarjeta
+			UPDATE TarjetaDePuntos
+			SET puntos = saldoFinal
+			WHERE idTarjeta = NEW.idTarjeta;
+			--Insertamos en la tabla de pagos.
+			RETURN NEW;
+		ELSE
+			RAISE EXCEPTION 'El saldo de la tarjeta de puntos no es suficiente.'
+			USING HINT = 'Intenta pagar con otro método de pago.';
+		END IF;
 	END IF;
 END;
 $$
 language PLPGSQL;
-
 
 CREATE TRIGGER validaPagos
 BEFORE INSERT
