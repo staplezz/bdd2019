@@ -9,3 +9,4 @@ Pasado del modelo relacional a instrucciones DDL y agregación de comentarios so
 
 5/Sep/2019
 Revisión de las instrucciones DDL.
+jdksjakdja
